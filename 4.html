@@ -1,0 +1,29 @@
+//写一个随机数的猜数游戏，计算机随机给出一定范围的随机数，学生说出猜测的数字，计算机指出猜大了还是猜小了，直到猜中为止。计算机给出猜测的次数。
+        <button onclick="startGame()">猜数游戏开始</button>
+        <script>
+                var startGame= function() {
+                //math.random()生成0-1之间的随机数，Math.floor()向下取整
+                const min = 1;
+                const max = 100;
+                const randomNumber = getRandomNumber(min, max);
+                let guess;
+                let attempts = 0;
+
+                while (guess !== randomNumber) {
+                    guess = parseInt(prompt(`请输入一个${min}到${max}之间的数字:`));
+                    attempts++;
+
+                    if (guess < randomNumber) {
+                        alert("猜小了，请再试一次！");
+                    } else if (guess > randomNumber) {
+                        alert("猜大了，请再试一次！");
+                    } else if (guess === randomNumber) {
+                        alert(`恭喜你，猜对了！你总共猜了${attempts}次。`);
+                    } else {
+                        alert("请输入有效的数字！");
+                    }
+                }
+                function getRandomNumber(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                }
+                }
