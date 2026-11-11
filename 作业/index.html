@@ -275,6 +275,7 @@
     </div>
     <div class="wy-demo">
       <span class="wy-demo-tag">演示四 - 效果实验台</span>
+      <span class="wy-demo-tag" style="background:#fff7ed;border-color:#fed7aa;color:#c2410c">作业三新增：键盘 ← → 可翻页</span>
       <div class="wy-swiper">
         <div class="swiper" id="wySw4">
           <div class="swiper-wrapper">
@@ -309,8 +310,114 @@
     </div>
   </div>
 
+  <!-- 作业一 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">一</span>
+      <h2>作业一 · 提示词工程师 <small>不写代码，写提示词：让 AI 生成 #mySw4 配置（2 轮迭代）</small></h2>
+    </div>
+    <p class="wy-txt">把 4 个硬性需求“翻译”给 AI：<b>① 无缝循环　② 3.2 秒自动翻页且手动操作后不停止　③ 圆点分页器可点击　④ 初始效果为 cube</b>，让它生成 <code>new Swiper('#mySw4', {...})</code> 配置。</p>
+
+    <p class="wy-txt"><b>第 1 轮提示词（故意只说大概）</b></p>
+    <div class="wy-chat wy-q"><i>我的提示词 · 第 1 轮</i>帮我用 Swiper 写个轮播：new Swiper('#mySw4', {...})，要循环播放、3.2 秒左右自动翻页、带圆点分页器，效果用 cube。</div>
+    <pre class="wy-code">new Swiper('#mySw4', {
+  loop: true,
+  autoplay: true,                            // <b>错1</b>：等于 delay 3000，不是 3200
+  pagination: { el: '.swiper-pagination' },  // <b>错2</b>：圆点不可点击；<b>错3</b>：没指向本页 #wyPag4
+  effect: 'cube'
+})</pre>
+    <p class="wy-txt"><b>第 1 轮检查结论：</b>AI 漏了 3 处——② 没写 <code>disableOnInteraction: false</code>，手动拖动后自动播放会<b>停</b>；③ 圆点没配 <code>clickable: true</code>，点不动；delay 也没给精确值。第一版提示词败在“只说大概”，没把需求落到参数级。</p>
+
+    <p class="wy-txt"><b>第 2 轮提示词（把需求说成参数级）</b></p>
+    <div class="wy-chat wy-q"><i>我的提示词 · 第 2 轮</i>重来，4 条硬性要求逐条满足并逐条注释：① loop: true 无缝循环；② autoplay.delay 精确 3200，且 disableOnInteraction: false（手动操作后继续播）；③ pagination 的 el 用 #wyPag4、clickable: true；④ effect: 'cube'。</div>
+    <pre class="wy-code">new Swiper('#mySw4', {
+  loop: true,                    // ① 无缝循环
+  autoplay: {
+    delay: 3200,                 // ② 精确 3.2 秒
+    disableOnInteraction: false  // ② 手动操作后不停止
+  },
+  pagination: {
+    el: '#wyPag4',               // ③ 指向本页圆点容器
+    clickable: true              // ③ 圆点可点击
+  },
+  effect: 'cube'                 // ④ 初始效果
+})</pre>
+
+    <div class="wy-req">
+      <h3>亲自粘进页面逐条验证</h3>
+      <p>验证方法：把配置里的 <code>#mySw4</code> 换成本页的 <code>#wySw4</code> 粘进底部 script 区（验证后还原），逐条核对：</p>
+    </div>
+    <p class="wy-ver">① <b>无缝循环</b>：拖到最后一张继续拖，直接接回第一张、不回跳 —— 通过</p>
+    <p class="wy-ver">② <b>3.2 秒自动翻页、手动不停止</b>：约 3.2 秒翻一张；按住拖动松手后仍继续自动播 —— 通过</p>
+    <p class="wy-ver">③ <b>圆点可点击</b>：点第 3 个圆点直接跳到第 3 张 —— 通过</p>
+    <p class="wy-ver">④ <b>初始效果 cube</b>：粘入配置刷新后首屏即立方体翻转 —— 通过（本页演示四按钮版初始仍是 slide，验证时临时粘入）</p>
+    <div class="wy-shot">截图粘贴位（答辩前自己截好贴上）：1. 循环拖动验证图　2. 圆点点击跳转图　3. cube 初始效果首屏图</div>
+    <p class="wy-star">答辩抽问准备：第 1 轮漏了「手动操作后不停止」和「圆点可点击」；第 2 轮把每条需求直接写成「参数名 + 期望值」，AI 就没再漏；AI 第 1 版错在 autoplay: true（默认 3000ms 且交互即停）、pagination 没配 clickable 也没指向 #wyPag4。</p>
+  </div>
+
+  <!-- 作业二 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">二</span>
+      <h2>作业二 · creative 电影感 <small>课堂没讲的第 7 种 effect：AI + 官方示例 257 自学</small></h2>
+    </div>
+    <p class="wy-txt">课堂只讲了 6 种 effect。打开官方示例 <code>swiper/demo/257-effect-creative.html</code>，配合 AI 读懂 <code>creativeEffect</code> 的 transform 写法，为演示四新增第 7 个按钮 <b>[creative 电影感]</b>（上方演示四可点：上一张缩小左移带角度、下一张放大右移带角度，像电影选片墙）。</p>
+
+    <div class="wy-chat wy-q"><i>我的提示词</i>Swiper 的 creative effect 课堂没讲。官方示例 257 里 creativeEffect.prev 写的是 { shadow: true, translate: ['-125%', 0, -800], rotate: [0, 0, -90] }——逐个字段讲清楚 transform 的写法和取值含义，并说明 prev/next 分别管哪些卡片，别只翻译文档。</div>
+    <div class="wy-chat wy-a"><i>AI 回答 · 要点</i>prev / next 分别描述「当前卡片左侧（已看过）」和「右侧（还没看）」卡片的待命姿态：translate 是 [x, y, z]，x/y 用百分号、z 用像素；rotate 是 [x, y, z] 三轴角度；shadow 加投影。Swiper 按每张 slide 的 progress 在「原位 → 这个姿态」之间连续插值，所以翻页时卡片是滑过去的，不是瞬移。</div>
+
+    <pre class="wy-code">// 演示四第 7 个按钮 [creative 电影感] 的关键参数（本页已实现）
+if (effectName === 'creative') {
+  option.slidesPerView = 1.8;     // 露出两侧卡片，才有“选片墙”
+  option.centeredSlides = true;   // 当前卡片居中
+  option.creativeEffect = {
+    limitProgress: 2,
+    prev: {                       // 上一张：缩小 + 左移 + 带角度
+      shadow: true,
+      translate: ['-55%', 0, -380],
+      rotate: [0, 0, -9]
+    },
+    next: {                       // 下一张：放大 + 右移 + 带角度
+      shadow: true,
+      translate: ['55%', 0, 120],
+      rotate: [0, 0, 9]
+    }
+  };
+}</pre>
+
+    <p class="wy-txt"><b>追问后用自己的话写下来：</b>prev 的 transform 控制“来路”——已经看过的卡片以什么大小、位置、角度退到左边待命；next 的 transform 控制“去路”——还没看的卡片在右边以什么姿态等着进场。translate 的 z 取负是退远（显小）、取正是凑近（显大）。</p>
+    <p class="wy-star">答辩抽问准备：transform 里的百分号相对 <b>slide 自身</b>的宽/高（x 相对 slide 宽、y 相对 slide 高），不是容器宽；把 rotate 第三位从 ±9 改成 ±20，卡片倾角立刻变 20 度（现场可演示）。</p>
+  </div>
+
+  <!-- 作业三 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">三</span>
+      <h2>作业三 · 第六件作品 + keyboard <small>爱达·魔都号（AI 配图）+ 课堂没讲过的键盘控制</small></h2>
+    </div>
+    <p class="wy-txt">① 光影展新增第六件作品 <b>爱达·魔都号</b>（首艘国产大型邮轮，2024 年 1 月首航），配图由 AI 生成（横版 16:9），slide 结构完整，四个演示均已加入；② 新增课堂没讲过的 <b>keyboard 键盘控制</b>：演示四滚到可视区后按 ← → 即可翻页。</p>
+
+    <div class="wy-chat wy-q"><i>我的提示词 · 加作品</i>光影展要加第六件作品“爱达·魔都号”：我国首艘国产大型邮轮，2024 年 1 月首航。给我和现有五件结构完全一致的 slide HTML（img + 标题 + 一句简介），配图用 AI 生成、横版 16:9，并给我一段生成配图的提示词。</div>
+    <div class="wy-chat wy-a"><i>AI 回答 · 第一次哪里不对</i>第一次给的标题写成“爱达·魔都号邮轮”（语义重复）、简介漏了“2024 年 1 月”、img 没写 alt——已改为「首艘国产大型邮轮，2024 年 1 月首航」并补上 alt。配图提示词：Adora Magic City, China first domestically built large luxury cruise ship, golden hour, photorealistic, cinematic wide shot（image_size = landscape_16_9）。</div>
+
+    <div class="wy-chat wy-q"><i>我的提示词 · 加功能</i>再给 #wySw4 加键盘控制：左右方向键翻页。页面里还有其他轮播和输入框，别让键盘抢按键。这个参数课堂没讲，直接给写法和参数说明。</div>
+    <pre class="wy-code">// AI 第 1 版：keyboard: true      <b>问题：全局监听，打字/滚动页面会误触翻页，多个轮播一起动</b>
+// 我改成（第 2 版，已用在本页演示四）：
+keyboard: {
+  enabled: true,          // 开启键盘监听
+  onlyInViewport: true    // 轮播出现在视口内才响应方向键
+}</pre>
+
+    <p class="wy-txt"><b>答辩四连问自答：</b></p>
+    <p class="wy-ans">① <b>这段代码什么意思</b> —— enabled 打开键盘监听；onlyInViewport 限定「滚到可视区才听键盘」，页面里多个轮播互不抢键。</p>
+    <p class="wy-ans">② <b>AI 第一次给的哪里不对、我改了什么</b> —— 它只给 keyboard: true，会全局抢按键、打字误触翻页；我改成对象写法并补 onlyInViewport: true。</p>
+    <p class="wy-ans">③ <b>新参数的作用</b> —— onlyInViewport: true：哪个轮播在视口里，方向键就归哪个。</p>
+    <p class="wy-ans">④ <b>现场把 delay 改成指定值</b> —— 把 initSw4 里 autoplay.delay 从 3200 改成指定值（如 1500），每张停留 1.5 秒就翻页；因为 disableOnInteraction: false，手动滑动后仍按新节奏继续自动播。</p>
+    <div class="wy-shot">截图粘贴位（答辩前自己截好贴上）：1. 四个演示里的第六张「爱达·魔都号」　2. 演示四按 ← → 键盘翻页前/后对比图</div>
+  </div>
+
   <div class="wy-back"><a href="index.html">← 返回课堂实践中心</a>　<a href="swiper-lesson.html">查看教师讲解版 →</a></div>
-  <footer>Swiper课堂操作任务 - 大国重器光影展（学生版） - 高级网页设计</footer>
+  <footer>大国重器光影展 - Swiper 课堂任务 + AI 协作作业（提示词记录齐全） - 高级网页设计</footer>
 </div>
 
 <script>
@@ -355,6 +462,7 @@ function initSw4(effectName = "slide") {
       disableOnInteraction: false
     },
     speed: 800,
+    keyboard: { enabled: true, onlyInViewport: true }, // 作业三新增：键盘左右键控制，仅可视区内响应
     pagination: {
       el: '#wyPag4',
       clickable: true
@@ -363,13 +471,20 @@ function initSw4(effectName = "slide") {
   }
   // 各个效果专属参数
   if(effectName === "creative"){
+    // 作业二：creative 电影感 —— 露出两侧卡片，像电影选片墙
+    option.slidesPerView = 1.8;
+    option.centeredSlides = true;
     option.creativeEffect = {
+      limitProgress: 2,
       prev: {
         shadow: true,
-        translate: ["-20%", 0, -1]
+        translate: ["-55%", 0, -380],   // 上一张：左移 + z轴后退（缩小）
+        rotate: [0, 0, -9]              // 上一张：带角度
       },
       next: {
-        translate: ["100%", 0, 0]
+        shadow: true,
+        translate: ["55%", 0, 120],     // 下一张：右移 + z轴向前（放大）
+        rotate: [0, 0, 9]               // 下一张：带角度
       }
     }
   }

@@ -252,9 +252,9 @@
     </div>
     <div class="wy-req">
       <h3>🎬 一、creative 电影墙（课堂未讲的第 7 种效果）</h3>
-      <p>官方示例 <code>257-effect-creative</code> 只给了 transform 的写法，本页把它改成"电影选片墙"：<br>
-        · <b>prev（上一张）</b>控制<b>已经滑过去的那张</b>停在哪里——<code>translate:['-45%',0,-120]</code> 把它缩小后退并左移，<code>rotate:[0,0,-14]</code> 让它带一点角度斜靠，<code>scale:0.72</code> 再压小一圈；<br>
-        · <b>next（下一张）</b>控制<b>还没进来的那张</b>在哪儿等着——<code>translate:['100%',0,0]</code> 把它放在右侧屏幕外，<code>scale:1.12</code> 让它进来时由大收小，形成"推门而入"的进场感。
+      <p>官方示例 <code>257-effect-creative</code> 只给了 transform 的写法，本页把它改成"电影选片墙"：先用 <code>slidesPerView: 1.8</code> + <code>centeredSlides: true</code> 让两侧各露出小半张，再用 <code>creativeEffect</code> 摆好它们的位置——<br>
+        · <b>prev（上一张）</b>控制<b>已经滑过去的那张</b>停在哪里——<code>translate:['-55%',0,-380]</code> 把它左移并沿 Z 轴后退 380px（后退自然显小），<code>rotate:[0,0,-9]</code> 再让它逆时针斜靠 9 度；<br>
+        · <b>next（下一张）</b>控制<b>还没进来的那张</b>在哪儿等着——<code>translate:['55%',0,120]</code> 右移并把 Z 轴往前推 120px（显大），<code>scale:1.12</code> 再放大一点，切换时收回原位就是"放大右移进场"。
       </p>
     </div>
     <div class="wy-req">
@@ -341,19 +341,21 @@
     }
     /* 加分项·任务二：creative 电影墙 */
     if (effectName === "creative") {
+      option.slidesPerView = 1.8;        // 一屏露出 1.8 张，左右两张才有位置"露脸"
+      option.centeredSlides = true;      // 当前张居中，两侧卡片对称露出
       option.creativeEffect = {
+        limitProgress: 2,
         /* prev：已经滑走的上一张——缩小、左移、带角度斜靠在左侧 */
         prev: {
           shadow: true,
-          translate: ["-45%", 0, -120],
-          rotate: [0, 0, -14],
-          scale: 0.72,
-          opacity: 0.55
+          translate: ["-55%", 0, -380],  // 左移 55%，沿 Z 轴后退 380px（越远越小）
+          rotate: [0, 0, -9],            // 逆时针斜靠 9 度
+          opacity: 0.85
         },
-        /* next：还没进来的下一张——停在右侧屏外并放大，进场时由大收小 */
+        /* next：还没进来的下一张——右移并向前放大，进场时再收回来 */
         next: {
           shadow: true,
-          translate: ["100%", 0, 0],
+          translate: ["55%", 0, 120],    // 右移 55%，Z 轴向前 120px（比当前张更近更大）
           scale: 1.12
         }
       };

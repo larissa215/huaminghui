@@ -238,18 +238,20 @@
       <div class="wy-bubble">
         <b>prev</b> 描述"已经滑走、停在当前幻灯片左边的那一张"的状态；<b>next</b> 描述"还没进来、等在右边的那一张"的状态。两者都可以写 <code>translate</code>、<code>rotate</code>、<code>scale</code>、<code>opacity</code>、<code>shadow</code>。
 <pre class="wy-code">effect: 'creative',
+slidesPerView: 1.8,                        <span class="c">// 一屏露 1.8 张，两侧才有位置露脸</span>
+centeredSlides: true,                      <span class="c">// 当前张居中</span>
 creativeEffect: {
+  limitProgress: 2,
   prev: {                                  <span class="c">// 上一张：缩小 + 左移 + 带角度</span>
     shadow: true,
-    translate: ['-45%', 0, -120],           <span class="c">// x 左移 45%，z 后退 120px（越远越小）</span>
-    rotate: [0, 0, -14],                    <span class="c">// 绕 Z 轴逆时针倾斜 14 度</span>
-    scale: 0.72,                            <span class="c">// 再压小到 72%</span>
-    opacity: 0.55
+    translate: ['-55%', 0, -380],           <span class="c">// 左移 55%，Z 轴后退 380px（后退显小）</span>
+    rotate: [0, 0, -9],                     <span class="c">// 绕 Z 轴逆时针斜靠 9 度</span>
+    opacity: 0.85
   },
-  next: {                                  <span class="c">// 下一张：停在右侧屏外并放大</span>
+  next: {                                  <span class="c">// 下一张：右移 + 放大等待进场</span>
     shadow: true,
-    translate: ['100%', 0, 0],              <span class="c">// 整个宽度推到右边屏幕外</span>
-    scale: 1.12                             <span class="c">// 进来时由大收小</span>
+    translate: ['55%', 0, 120],             <span class="c">// 右移 55%，Z 轴向前 120px（显大）</span>
+    scale: 1.12                             <span class="c">// 再放大一点，进场时收回</span>
   }
 }</pre>
       </div>
@@ -257,14 +259,14 @@ creativeEffect: {
 
     <div class="wy-talk wy-me">
       <div class="wy-role"><span>我</span>第 2 问（追问知识点）</div>
-      <div class="wy-bubble">translate 里的 <code>'100%'</code>、<code>'-45%'</code> 是相对谁的百分比？我想让卡片倾斜到 20 度该怎么改？</div>
+      <div class="wy-bubble">translate 里的 <code>'55%'</code>、<code>'-55%'</code> 是相对谁的百分比？我想让卡片倾斜到 20 度该怎么改？</div>
     </div>
     <div class="wy-talk wy-ai">
       <div class="wy-role"><span>AI</span>第 2 答</div>
-      <div class="wy-bubble">百分比是相对<b>幻灯片自身的宽/高</b>（不是容器、不是屏幕）：<code>translate:['-45%',0,-120]</code> 里的 -45% = 往左挪自身宽度的 45%；第二个数是 Y 轴；第三个是 <b>Z 轴像素值</b>，负得越多越远越小。<br>要转 20 度，把 <code>rotate</code> 的第三个值改成 20：<code>rotate: [0, 0, 20]</code>（正数顺时针，负数逆时针）。</div>
+      <div class="wy-bubble">百分比是相对<b>幻灯片自身的宽/高</b>（不是容器、不是屏幕）：<code>translate:['-55%',0,-380]</code> 里的 -55% = 往左挪自身宽度的 55%；第二个数是 Y 轴；第三个是 <b>Z 轴像素值</b>，负得越多越远越小。<br>要转 20 度，把 <code>rotate</code> 的第三个值改成 20：<code>rotate: [0, 0, 20]</code>（正数顺时针，负数逆时针）。</div>
     </div>
 
-    <div class="wy-note"><b>落地：</b>这段配置已经做成任务页演示四的第 7 个按钮「creative 电影墙」，点按钮即可对比 slide / cube / creative 的差别（切换时先 <code>destroy</code> 再 <code>new Swiper</code>）。注意：creative 静止时只保留当前一张，<b>上一张缩小倾斜、下一张放大进场都发生在切换过程的那 800 毫秒里</b>，要看效果需要点箭头或拖动；截图右侧那条窄边就是 next 在屏外放大等待的进场位。</div>
+    <div class="wy-note"><b>落地：</b>这段配置已经做成任务页演示四的第 7 个按钮「creative 电影墙」，点按钮即可对比 slide / cube / creative 的差别（切换时先 <code>destroy</code> 再 <code>new Swiper</code>）。关键在 <code>slidesPerView: 1.8</code>：不让一张铺满整屏，左右两张才有位置露出来，静止时就能看到"左小右大"的选片墙。</div>
 
     <img class="wy-shot" src="验证截图/02-creative电影墙.png" alt="creative 电影墙实际渲染截图">
     <div class="wy-shot-cap">截图：演示四实际渲染 · 7 个效果按钮中 creative 已选中，轮播切到 creative 模式</div>
