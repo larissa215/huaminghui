@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>提示词与 AI 对话记录 · 三次课作业 · 华明慧</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937}
+  .wy-wrap{max-width:1000px;margin:0 auto;padding:40px 20px 60px}
+
+  .wy-head{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);border-radius:20px;padding:36px 38px;color:#fff;margin-bottom:14px;box-shadow:0 12px 30px rgba(15,43,91,.3)}
+  .wy-head .wy-badge{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:13px;letter-spacing:2px;margin-bottom:14px}
+  .wy-head h1{font-size:28px;letter-spacing:1px;line-height:1.4}
+  .wy-head h1 b{color:#ffd166}
+  .wy-head p{margin-top:12px;font-size:14.5px;color:#d9e3f5;line-height:2}
+  .wy-goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .wy-goals i{font-style:normal;font-size:13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);padding:6px 14px;border-radius:8px}
+  .wy-head a.wy-back-link{display:inline-flex;align-items:center;gap:8px;margin-top:16px;text-decoration:none;font-size:13.5px;font-weight:bold;color:#0f2b5b;background:#ffd166;border-radius:999px;padding:9px 20px}
+
+  .wy-sec{background:#fff;border-radius:18px;padding:28px 30px;margin-bottom:26px;border:1px solid #e8ecf5;box-shadow:0 4px 14px rgba(31,41,55,.06);position:relative;overflow:hidden}
+  .wy-sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#0f2b5b,#1d5bbf)}
+  .wy-sec-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .wy-sec-head .wy-no{flex:none;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;font-size:17px;font-weight:bold;display:flex;align-items:center;justify-content:center}
+  .wy-sec-head h2{font-size:20px;color:#111827}
+  .wy-sec-head small{display:block;font-weight:normal;color:#9ca3af;font-size:13px;margin-top:3px}
+  .wy-sec p.wy-txt{font-size:14.5px;color:#374151;line-height:2;margin-bottom:10px}
+  .wy-sec p.wy-txt b{color:#0f2b5b}
+  .wy-sec code, .wy-plain code{background:#eef2ff;color:#1d4ed8;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:13px}
+
+  /* 对话气泡：提示词 / AI 回答 */
+  .wy-talk{margin:14px 0}
+  .wy-role{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:bold;letter-spacing:1px;margin-bottom:8px}
+  .wy-role span{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+  .wy-me .wy-role{color:#1d5bbf}
+  .wy-me .wy-role span{background:#1d5bbf}
+  .wy-ai .wy-role{color:#15803d}
+  .wy-ai .wy-role span{background:#16a34a}
+  .wy-bubble{border-radius:14px;padding:14px 18px;font-size:14px;line-height:2}
+  .wy-me .wy-bubble{background:#eef4ff;border:1px solid #c7d8f8;color:#1e3a6b}
+  .wy-ai .wy-bubble{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d}
+  pre.wy-code{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:16px 18px;overflow-x:auto;font-family:Consolas,monospace;font-size:13px;line-height:1.85;margin:10px 0}
+  pre.wy-code .c{color:#7dd3fc}
+  pre.wy-code .k{color:#fca5a5}
+
+  /* 验证表 */
+  table.wy-check{width:100%;border-collapse:collapse;font-size:13.5px;margin:12px 0}
+  table.wy-check th,table.wy-check td{border:1px solid #e5eaf3;padding:9px 12px;text-align:left}
+  table.wy-check th{background:#f2f6ff;color:#0f2b5b;font-weight:bold}
+  table.wy-check td.ok{color:#15803d;font-weight:bold}
+  table.wy-check td.bad{color:#b91c1c;font-weight:bold}
+  table.wy-check code{background:#f1f5f9;color:#1d4ed8;padding:1px 6px;border-radius:4px;font-family:Consolas,monospace;font-size:12.5px}
+
+  .wy-req{background:#f0fdf4;border:1.5px dashed #16a34a;border-radius:12px;padding:14px 18px;margin:14px 0 6px}
+  .wy-req h3{font-size:14.5px;color:#15803d;margin-bottom:6px}
+  .wy-req p{font-size:13.5px;color:#166534;line-height:2}
+  .wy-req code{background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+
+  .wy-note{background:#fffbea;border:1px solid #fde68a;border-radius:12px;padding:14px 18px;font-size:13.5px;color:#7c5e10;line-height:2;margin-top:12px}
+  .wy-note b{color:#b45309}
+  .wy-note code{background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+
+  /* 现场演示台（验收自检用） */
+  .wy-demo{margin:16px 0 4px}
+  .wy-demo .wy-demo-tag{display:inline-block;font-size:12.5px;color:#0f2b5b;background:#e8f0ff;border:1px solid #c7d8f8;border-radius:999px;padding:4px 14px;margin-bottom:12px}
+  .wy-swiper{width:100%;max-width:760px;margin:0 auto}
+  .wy-swiper .swiper{border-radius:16px;box-shadow:0 10px 26px rgba(15,43,91,.18)}
+  .wy-swiper .swiper-slide{position:relative;height:290px}
+  .wy-swiper .swiper-slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .wy-swiper .wy-cap{position:absolute;left:0;right:0;bottom:0;padding:34px 20px 14px;color:#fff;background:linear-gradient(transparent,rgba(5,15,35,.82))}
+  .wy-swiper .wy-cap h3{font-size:18px;letter-spacing:1px}
+  .wy-swiper .wy-cap p{font-size:13px;color:#dbe6f8;margin-top:4px}
+  .wy-swiper .swiper-pagination-bullet{background:#0f2b5b;opacity:.35}
+  .wy-swiper .swiper-pagination-bullet-active{background:#e8890c;opacity:1;width:22px;border-radius:6px}
+
+  .wy-shot{width:100%;border-radius:14px;border:1px solid #e2e8f5;display:block;margin:12px 0 6px}
+  .wy-shot-cap{font-size:12.5px;color:#8a94a6;text-align:center}
+
+  footer{text-align:center;margin-top:34px;color:#9ca3af;font-size:13px;line-height:2}
+</style>
+</head>
+<body>
+<div class="wy-wrap">
+
+  <div class="wy-head">
+    <span class="wy-badge">高 职 · 高 级 网 页 设 计 · 三 次 课 作 业</span>
+    <h1>提示词与 AI 对话记录 · <b>大国重器光影展</b></h1>
+    <p>任务一：两轮提示词迭代（含每轮 AI 回答、逐项验证与结论）；任务二：creative 电影墙的 AI 请教记录与 prev / next 解释；任务三：第六件展品与 parallax 新能力的对话摘录。文末附答辩四连问的自答。</p>
+    <div class="wy-goals"><i>任务一 · 提示词工程师</i><i>任务二 · creative 仿写</i><i>任务三 · 综合创作</i><i>作者：华明慧</i></div>
+    <a class="wy-back-link" href="swiper-task.html">← 返回任务页（四个轮播演示台）</a>
+  </div>
+
+  <!-- ═══════════ 任务一 第 1 轮 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">1</span>
+      <h2>任务一 · 第 1 轮提示词<small>先按直觉问一次，看看 AI 会给什么</small></h2>
+    </div>
+
+    <div class="wy-talk wy-me">
+      <div class="wy-role"><span>我</span>第 1 轮提示词</div>
+      <div class="wy-bubble">用 Swiper 11 写一个轮播，id 是 <code>mySw4</code>：无缝循环、3.2 秒自动播放、有圆点分页器、初始效果是立方体 cube，给我完整代码。</div>
+    </div>
+
+    <div class="wy-talk wy-ai">
+      <div class="wy-role"><span>AI</span>第 1 轮回答</div>
+      <div class="wy-bubble">
+        好的，直接给配置：
+<pre class="wy-code">var mySw4 = new Swiper('#mySw4', {
+  loop: true,
+  autoplay: { delay: 3200 },
+  pagination: { el: '#myPag4' },
+  effect: 'cube',
+  cubeEffect: { shadow: true, slideShadows: true }
+});
+// HTML 里放 &lt;div class="swiper-pagination" id="myPag4"&gt;&lt;/div&gt; 即可</pre>
+        这版能满足循环、自动播放、立方体效果，圆点分页器也已经加上。
+      </div>
+    </div>
+
+    <p class="wy-txt">粘进页面跑了一遍，逐项对照需求的实测结果如下（数值取自页面里 <code>mySw4.params</code> 的真实运行值）：</p>
+
+    <table class="wy-check">
+      <tr><th>需求</th><th>期望</th><th>第 1 轮实测</th><th>结论</th></tr>
+      <tr><td>① 无缝循环</td><td><code>loop === true</code></td><td><code>true</code></td><td class="ok">✔ 通过</td></tr>
+      <tr><td>② 3.2 秒自动翻滚</td><td><code>autoplay.delay === 3200</code></td><td><code>3200</code></td><td class="ok">✔ 通过</td></tr>
+      <tr><td>② 手动操作后不停</td><td><code>autoplay.disableOnInteraction === false</code></td><td class="bad"><code>true</code>（默认值）</td><td class="bad">✘ 不通过</td></tr>
+      <tr><td>③ 圆点分页器</td><td><code>pagination.el === '#myPag4'</code></td><td><code>#myPag4</code></td><td class="ok">✔ 通过</td></tr>
+      <tr><td>③ 圆点可点击</td><td><code>pagination.clickable === true</code></td><td class="bad"><code>false</code>（默认值）</td><td class="bad">✘ 不通过</td></tr>
+      <tr><td>④ 初始效果 cube</td><td><code>effect === 'cube'</code></td><td><code>cube</code></td><td class="ok">✔ 通过</td></tr>
+    </table>
+
+    <div class="wy-note"><b>一句话结论：</b>第 1 轮代码语法没错、页面能动，但"圆点可点"和"拖动后自动播放不停止"两项没做到——因为我提示词里只说了"有圆点"和"自动播放"，AI 就按默认值给了 <code>clickable:false</code>、<code>disableOnInteraction:true</code>。</div>
+  </div>
+
+  <!-- ═══════════ 任务一 第 2 轮 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">2</span>
+      <h2>任务一 · 第 2 轮提示词<small>把需求翻译成参数名，逐条点名</small></h2>
+    </div>
+
+    <div class="wy-talk wy-me">
+      <div class="wy-role"><span>我</span>第 2 轮提示词</div>
+      <div class="wy-bubble">
+        上一版有两处没满足需求，请改：<br>
+        ① 圆点分页器必须<b>可点击跳转</b>，请显式写 <code>pagination.clickable: true</code>；<br>
+        ② 用户手动拖动后自动播放<b>不能停</b>，请显式写 <code>autoplay.disableOnInteraction: false</code>；<br>
+        ③ 其余需求也请逐条对应成参数，不许省略：<code>loop: true</code>、<code>autoplay.delay: 3200</code>、<code>pagination.el: '#myPag4'</code>、<code>effect: 'cube'</code> 加 <code>cubeEffect</code>、切换动画 <code>speed: 800</code>；<br>
+        ④ 每个参数后面用注释说明它控制什么，方便我答辩。
+      </div>
+    </div>
+
+    <div class="wy-talk wy-ai">
+      <div class="wy-role"><span>AI</span>第 2 轮回答（最终版）</div>
+      <div class="wy-bubble">
+<pre class="wy-code">var mySw4 = new Swiper('#mySw4', {
+  loop: true,                                   <span class="c">// ① 无缝循环：最后一张往后翻回到第一张</span>
+  autoplay: {
+    delay: 3200,                                <span class="c">// ② 每张停留 3.2 秒（停留时长，不是动画时长）</span>
+    disableOnInteraction: false                 <span class="c">// ② 手动拖动后自动播放继续</span>
+  },
+  pagination: {
+    el: '#myPag4',                              <span class="c">// ③ 圆点挂在哪个容器上</span>
+    clickable: true                             <span class="c">// ③ 圆点可点击跳转</span>
+  },
+  effect: 'cube',                               <span class="c">// ④ 初始效果：3D 立方体</span>
+  cubeEffect: {
+    shadow: true,                               <span class="c">// ④ 立方体投影</span>
+    slideShadows: true                          <span class="c">// ④ 每张幻灯自己的阴影</span>
+  },
+  speed: 800                                    <span class="c">// 切换动画 800 毫秒</span>
+});
+// HTML：&lt;div class="swiper-pagination" id="myPag4"&gt;&lt;/div&gt;</pre>
+        这一版把 4 项需求都显式写成了参数，默认值不再参与决策。
+      </div>
+    </div>
+
+    <div class="wy-demo">
+      <span class="wy-demo-tag">🧪 验收自检 · 下面就是第 2 轮代码跑起来的真实页面（下方数值为运行时读取）</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="mySw4">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="swiper-imgs/tiangong_1.jpg" alt="天宫空间站"><div class="wy-cap"><h3>天宫空间站</h3><p>cube 立方体 · 3.2 秒自动翻滚</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/fuxing_1.jpg" alt="复兴号"><div class="wy-cap"><h3>复兴号动车组</h3><p>拖动一下，自动播放不会停</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/c919_1.jpg" alt="C919"><div class="wy-cap"><h3>C919 大飞机</h3><p>点圆点可以跳到任意一张</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/fendouzhe_1.jpg" alt="奋斗者号"><div class="wy-cap"><h3>奋斗者号</h3><p>最后一张再往后翻会回到第一张</p></div></div>
+            <div class="swiper-slide"><img src="swiper-imgs/aida_1.jpg" alt="爱达·魔都号"><div class="wy-cap"><h3>爱达·魔都号</h3><p>第六件展品 · AI 生成配图</p></div></div>
+          </div>
+          <div class="swiper-pagination" id="myPag4"></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="wy-check" id="mySw4Check">
+      <tr><th>需求</th><th>期望</th><th>运行时实际值</th><th>结论</th></tr>
+    </table>
+
+    <div class="wy-note"><b>一句话结论：</b>第 2 轮四项需求全部通过——把"可点""不停"翻译成 <code>clickable:true</code>、<code>disableOnInteraction:false</code> 之后，AI 没有再走默认值。</div>
+  </div>
+
+  <!-- ═══════════ 答辩问答 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">问</span>
+      <h2>任务一 · 答辩追问自答<small>三个必答题，先写成文字再上机</small></h2>
+    </div>
+    <div class="wy-req">
+      <h3>Q1：第一版提示词漏掉了哪个需求？</h3>
+      <p>漏掉的是"可交互"的两个限定：只说了"有圆点分页器"，没说<b>圆点要能点击跳转</b>；只说了"自动播放"，没说<b>手动拖动后不能停</b>。Swiper 的默认值是 <code>pagination.clickable = false</code>、<code>autoplay.disableOnInteraction = true</code>，所以不写就必然不达标。</p>
+    </div>
+    <div class="wy-req">
+      <h3>Q2：第二轮是怎么"说清楚"的？</h3>
+      <p>做了三件事：① 把需求<b>翻译成参数名与取值</b>（<code>clickable: true</code>、<code>disableOnInteraction: false</code>）；② 点名"上一版哪两处不满足"，限定修改范围；③ 要求<b>逐条对应 + 每行注释</b>，不许用默认值概括。</p>
+    </div>
+    <div class="wy-req">
+      <h3>Q3：AI 第一次给的代码错在哪？</h3>
+      <p>不是语法错误，是"<b>能跑但不满足需求</b>"：<code>pagination</code> 缺少 <code>clickable</code>，圆点变成只能看不能点；<code>autoplay</code> 缺少 <code>disableOnInteraction: false</code>，用户一拖自动播放就停。<b>验证方式</b>是打开控制台读 <code>mySw4.params</code>，而不是"看起来能翻页"就算过。</p>
+    </div>
+  </div>
+
+  <!-- ═══════════ 任务二 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">2</span>
+      <h2>任务二 · creative 仿写<small>用官方示例 + AI 自学课堂没讲的第 7 种效果</small></h2>
+    </div>
+    <p class="wy-txt">官方示例地址：<code>swiperjs.com/demos/257-effect-creative.html</code>。示例只给了 sy 一行 transform，看不出 prev / next 到底谁管谁，所以我把问题拆成两次问。</p>
+
+    <div class="wy-talk wy-me">
+      <div class="wy-role"><span>我</span>第 1 问</div>
+      <div class="wy-bubble">我看了 Swiper 官方 257-effect-creative 示例，只有 prev、next 两段 transform。请问 <code>creativeEffect.prev</code> 和 <code>.next</code> 分别作用在"哪一张幻灯片"上？我要做"电影选片墙"：上一张缩小左移并带一点角度，下一张放大右移进场，给我完整配置。</div>
+    </div>
+    <div class="wy-talk wy-ai">
+      <div class="wy-role"><span>AI</span>第 1 答</div>
+      <div class="wy-bubble">
+        <b>prev</b> 描述"已经滑走、停在当前幻灯片左边的那一张"的状态；<b>next</b> 描述"还没进来、等在右边的那一张"的状态。两者都可以写 <code>translate</code>、<code>rotate</code>、<code>scale</code>、<code>opacity</code>、<code>shadow</code>。
+<pre class="wy-code">effect: 'creative',
+creativeEffect: {
+  prev: {                                  <span class="c">// 上一张：缩小 + 左移 + 带角度</span>
+    shadow: true,
+    translate: ['-45%', 0, -120],           <span class="c">// x 左移 45%，z 后退 120px（越远越小）</span>
+    rotate: [0, 0, -14],                    <span class="c">// 绕 Z 轴逆时针倾斜 14 度</span>
+    scale: 0.72,                            <span class="c">// 再压小到 72%</span>
+    opacity: 0.55
+  },
+  next: {                                  <span class="c">// 下一张：停在右侧屏外并放大</span>
+    shadow: true,
+    translate: ['100%', 0, 0],              <span class="c">// 整个宽度推到右边屏幕外</span>
+    scale: 1.12                             <span class="c">// 进来时由大收小</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="wy-talk wy-me">
+      <div class="wy-role"><span>我</span>第 2 问（追问知识点）</div>
+      <div class="wy-bubble">translate 里的 <code>'100%'</code>、<code>'-45%'</code> 是相对谁的百分比？我想让卡片倾斜到 20 度该怎么改？</div>
+    </div>
+    <div class="wy-talk wy-ai">
+      <div class="wy-role"><span>AI</span>第 2 答</div>
+      <div class="wy-bubble">百分比是相对<b>幻灯片自身的宽/高</b>（不是容器、不是屏幕）：<code>translate:['-45%',0,-120]</code> 里的 -45% = 往左挪自身宽度的 45%；第二个数是 Y 轴；第三个是 <b>Z 轴像素值</b>，负得越多越远越小。<br>要转 20 度，把 <code>rotate</code> 的第三个值改成 20：<code>rotate: [0, 0, 20]</code>（正数顺时针，负数逆时针）。</div>
+    </div>
+
+    <div class="wy-note"><b>落地：</b>这段配置已经做成任务页演示四的第 7 个按钮「creative 电影墙」，点按钮即可对比 slide / cube / creative 的差别（切换时先 <code>destroy</code> 再 <code>new Swiper</code>）。注意：creative 静止时只保留当前一张，<b>上一张缩小倾斜、下一张放大进场都发生在切换过程的那 800 毫秒里</b>，要看效果需要点箭头或拖动；截图右侧那条窄边就是 next 在屏外放大等待的进场位。</div>
+
+    <img class="wy-shot" src="验证截图/02-creative电影墙.png" alt="creative 电影墙实际渲染截图">
+    <div class="wy-shot-cap">截图：演示四实际渲染 · 7 个效果按钮中 creative 已选中，轮播切到 creative 模式</div>
+  </div>
+
+  <!-- ═══════════ 任务三 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">3</span>
+      <h2>任务三 · 综合创作 + 技术答辩<small>第六件展品 + 一个课堂没讲过的能力</small></h2>
+    </div>
+
+    <div class="wy-req">
+      <h3>① 第六件展品：爱达·魔都号</h3>
+      <p>提示词：<code>网页轮播展品配图：首艘国产大型邮轮"爱达·魔都号"，白色船体、多层甲板，停靠在现代化港口，晴空白云、蓝色海水，写实摄影，横向 16:9 构图，画面干净无文字</code><br>
+      生成结果 2560×1440（16:9），保存为 <code>swiper-imgs/aida_1.jpg</code>；四个演示台都补了完整的 <code>.swiper-slide</code> 结构（<code>img</code> + <code>.wy-cap</code>），现在每组都是 6 件展品。</p>
+    </div>
+
+    <div class="wy-talk wy-me">
+      <div class="wy-role"><span>我</span>选择新能力的提问</div>
+      <div class="wy-bubble">我要给"大国重器光影展"加一个课堂没讲过的 Swiper 能力，候选是 keyboard / mousewheel / zoom / parallax。这个页面是四个轮播上下排列，滚轮和键盘容易和页面滚动打架，我希望视觉上能看出"前后景层次"，你建议选哪个？配置怎么写？</div>
+    </div>
+    <div class="wy-talk wy-ai">
+      <div class="wy-role"><span>AI</span>回答</div>
+      <div class="wy-bubble">建议 <b>parallax（视差）</b>：它不抢滚动、不抢键盘，只在切换时让不同元素按不同速度移动，最适合展陈页的"层次感"。两步：<br>
+      ① 初始化里加 <code>parallax: true</code>；<br>
+      ② 给要漂移的元素加 <code>data-swiper-parallax="-150"</code>，数值绝对值越大移动越远。</div>
+    </div>
+
+    <div class="wy-note"><b>落地：</b>演示四的标题 <code>data-swiper-parallax="-150"</code>、副标题 <code>-320</code>，拖动时副标题跑得更快，形成前后景速度差；注意 <code>parallax: true</code> 必须写在每次重建的配置里，否则销毁重建后视差会失效。</div>
+
+    <img class="wy-shot" src="验证截图/01-cube验证.png" alt="任务一第 2 轮代码运行截图">
+    <div class="wy-shot-cap">截图：任务一第 2 轮配置运行实况（cube 效果 + 运行时参数自检）</div>
+  </div>
+
+  <!-- ═══════════ 答辩四连问 ═══════════ -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">答</span>
+      <h2>答辩四连问 · 自答<small>下节课现场抽查</small></h2>
+    </div>
+    <div class="wy-req">
+      <h3>1. 这段代码什么意思？</h3>
+      <p>演示四用 <code>wyInit4(effectName)</code> 统一装配：公共参数（loop / speed 800 / autoplay 3200 / pagination / parallax）写一份，再按 <code>effectName</code> 补对应的专属参数（<code>cubeEffect</code>、<code>creativeEffect</code> 等），最后 <code>destroy</code> 旧实例再 <code>new Swiper</code>。按钮点击只做两件事：切高亮、把 <code>data-fx</code> 交给 <code>wyInit4</code>。</p>
+    </div>
+    <div class="wy-req">
+      <h3>2. AI 第一次给的哪里不对？你改了什么？</h3>
+      <p>三处：① <code>pagination</code> 漏 <code>clickable</code>、<code>autoplay</code> 漏 <code>disableOnInteraction</code>（任务一第 1 轮）；② creative 配置第一次只写了 <code>translate</code>，没写 <code>scale</code> / <code>rotate</code>，"电影墙"缺角度和大小差；③ parallax 第一次只加了 <code>data-swiper-parallax</code>，漏了配置里的 <code>parallax: true</code>，属性完全不生效。</p>
+    </div>
+    <div class="wy-req">
+      <h3>3. 新参数的作用？</h3>
+      <p><code>parallax</code>：开启视差模块；<code>data-swiper-parallax</code>：该元素在一次切换中横向位移的比例，绝对值越大动得越多（负值反向）。<code>creativeEffect.prev / next</code>：分别定义"上一张"和"下一张"的静止位置与形态（translate 百分比相对幻灯片自身尺寸，第三个数值是 Z 轴像素）。</p>
+    </div>
+    <div class="wy-req">
+      <h3>4. 现场把 delay 改成指定值，并解释预期变化</h3>
+      <p>例如把演示三的 <code>autoplay.delay: 2600</code> 改成 <b>1000</b>：每张只停 1 秒，翻滚明显变快；改成 <b>5000</b> 则每张停 5 秒，节奏变慢。<b>delay 是"停留时长"，speed 才是"动画时长"</b>，两者不要混。改完刷新页面即可，不必销毁实例。</p>
+    </div>
+  </div>
+
+  <div class="wy-back" style="text-align:center;margin-top:28px">
+    <a href="swiper-task.html" style="display:inline-block;text-decoration:none;color:#0f2b5b;font-size:14.5px;font-weight:bold;background:#fff;border:1px solid #dbe4ff;border-radius:999px;padding:10px 26px">← 回到任务页</a>
+  </div>
+
+  <footer>提示词与 AI 对话记录 · 三次课作业 · 作者：华明慧 · 高级网页设计 · 2026-2027-1</footer>
+</div>
+
+<script>
+  /* ── 任务一第 2 轮配置：与上文代码完全一致 ── */
+  var mySw4 = new Swiper('#mySw4', {
+    loop: true,
+    autoplay: {
+      delay: 3200,
+      disableOnInteraction: false
+    },
+    pagination: {
+      el: '#myPag4',
+      clickable: true
+    },
+    effect: 'cube',
+    cubeEffect: { shadow: true, slideShadows: true },
+    speed: 800
+  });
+
+  /* ── 运行时自检：直接读实例参数，把真实值写进表格 ── */
+  (function () {
+    var rows = [
+      ['① 无缝循环', 'loop === true', mySw4.params.loop, mySw4.params.loop === true],
+      ['② 3.2 秒自动翻滚', 'autoplay.delay === 3200', mySw4.params.autoplay.delay, mySw4.params.autoplay.delay === 3200],
+      ['② 手动操作后不停', 'autoplay.disableOnInteraction === false', String(mySw4.params.autoplay.disableOnInteraction), mySw4.params.autoplay.disableOnInteraction === false],
+      ['③ 圆点分页器', 'pagination.el === "#myPag4"', mySw4.pagination.el.id ? '#' + mySw4.pagination.el.id : String(mySw4.pagination.el), mySw4.pagination.el.id === 'myPag4'],
+      ['③ 圆点可点击', 'pagination.clickable === true', String(mySw4.params.pagination.clickable), mySw4.params.pagination.clickable === true],
+      ['④ 初始效果 cube', 'effect === "cube"', mySw4.params.effect, mySw4.params.effect === 'cube']
+    ];
+
+    var table = document.getElementById('mySw4Check');
+    rows.forEach(function (row) {
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + row[0] + '</td>' +
+        '<td><code>' + row[1] + '</code></td>' +
+        '<td><code>' + row[2] + '</code></td>' +
+        '<td class="' + (row[3] ? 'ok' : 'bad') + '">' + (row[3] ? '✔ 通过' : '✘ 不通过') + '</td>';
+      table.appendChild(tr);
+    });
+  })();
+</script>
+</body>
+</html>

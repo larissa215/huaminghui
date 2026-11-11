@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大国重器光影展 - Swiper 课堂任务 + AI 协作作业</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;background:#f6f8fc;color:#1f2937}
+  .wy-wrap{max-width:1000px;margin:0 auto;padding:40px 20px 60px}
+
+  .wy-head{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);border-radius:20px;padding:36px 38px;color:#fff;margin-bottom:14px;box-shadow:0 12px 30px rgba(15,43,91,.3)}
+  .wy-head .wy-badge{display:inline-block;padding:5px 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:13px;letter-spacing:2px;margin-bottom:14px}
+  .wy-head h1{font-size:30px;letter-spacing:1px;line-height:1.4}
+  .wy-head h1 b{color:#ffd166}
+  .wy-head p{margin-top:12px;font-size:14.5px;color:#d9e3f5;line-height:2}
+  .wy-goals{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .wy-goals i{font-style:normal;font-size:13px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);padding:6px 14px;border-radius:8px}
+
+  .wy-rule{background:#fffbea;border:1px solid #fde68a;border-radius:16px;padding:18px 22px;margin-bottom:30px;font-size:14px;color:#7c5e10;line-height:2}
+  .wy-rule b{color:#b45309}
+  .wy-rule code{background:#fef3c7;color:#92400e;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:13px}
+
+  .wy-sec{background:#fff;border-radius:18px;padding:28px 30px;margin-bottom:26px;border:1px solid #e8ecf5;box-shadow:0 4px 14px rgba(31,41,55,.06);position:relative;overflow:hidden}
+  .wy-sec::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(#0f2b5b,#1d5bbf)}
+  .wy-sec-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .wy-sec-head .wy-no{flex:none;width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;font-size:19px;font-weight:bold;display:flex;align-items:center;justify-content:center}
+  .wy-sec-head h2{font-size:20px;color:#111827}
+  .wy-sec-head small{display:block;font-weight:normal;color:#9ca3af;font-size:13px;margin-top:3px}
+  .wy-sec p.wy-txt{font-size:14.5px;color:#374151;line-height:2;margin-bottom:10px}
+  .wy-sec p.wy-txt b{color:#0f2b5b}
+  .wy-sec code{background:#eef2ff;color:#1d4ed8;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:13px}
+
+  .wy-req{background:#f0fdf4;border:1.5px dashed #16a34a;border-radius:12px;padding:14px 18px;margin:14px 0 6px}
+  .wy-req h3{font-size:14.5px;color:#15803d;margin-bottom:6px}
+  .wy-req p{font-size:13.5px;color:#166534;line-height:2}
+  .wy-req code{background:#dcfce7;color:#15803d;padding:1px 7px;border-radius:5px;font-family:Consolas,monospace;font-size:12.5px}
+  .wy-req .wy-star{color:#e8890c;font-size:13px;display:block;margin-top:6px}
+
+  .wy-demo{margin:18px 0 6px}
+  .wy-demo .wy-demo-tag{display:inline-block;font-size:12.5px;color:#0f2b5b;background:#e8f0ff;border:1px solid #c7d8f8;border-radius:999px;padding:4px 14px;margin-bottom:12px}
+  .wy-swiper{width:100%;max-width:760px;margin:0 auto}
+  .wy-swiper .swiper{border-radius:16px;box-shadow:0 10px 26px rgba(15,43,91,.18)}
+  .wy-swiper .swiper-slide{position:relative;height:290px}
+  .wy-swiper .swiper-slide img{width:100%;height:100%;object-fit:cover;display:block}
+  .wy-swiper .wy-cap{
+    position:absolute;left:0;right:0;bottom:0;padding:34px 20px 14px;color:#fff;
+    background:linear-gradient(transparent,rgba(5,15,35,.82));
+  }
+  .wy-swiper .wy-cap h3{font-size:18px;letter-spacing:1px}
+  .wy-swiper .wy-cap p{font-size:13px;color:#dbe6f8;margin-top:4px}
+  .wy-swiper .swiper-pagination-bullet{background:#0f2b5b;opacity:.35}
+  .wy-swiper .swiper-pagination-bullet-active{background:#e8890c;opacity:1;width:22px;border-radius:6px}
+  .wy-swiper .swiper-button-next,.wy-swiper .swiper-button-prev{
+    width:42px;height:42px;border-radius:50%;background:rgba(15,43,91,.65);color:#fff;
+    --swiper-navigation-size:18px;transition:background .2s;
+  }
+  .wy-swiper .swiper-button-next:hover,.wy-swiper .swiper-button-prev:hover{background:#e8890c}
+
+  .wy-fx{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 2px}
+  .wy-fx button{
+    border:1.5px solid #c7d8f8;background:#fff;color:#1d5bbf;font-size:13.5px;
+    padding:8px 18px;border-radius:999px;cursor:pointer;transition:all .2s;font-family:inherit;
+  }
+  .wy-fx button:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(29,91,191,.18)}
+  .wy-fx button.wy-on{background:linear-gradient(135deg,#0f2b5b,#1d5bbf);color:#fff;border-color:transparent}
+
+  .wy-back{text-align:center;margin-top:28px}
+  .wy-back a{display:inline-block;text-decoration:none;color:#0f2b5b;font-size:14.5px;font-weight:bold;background:#fff;border:1px solid #dbe4ff;border-radius:999px;padding:10px 26px;transition:transform .2s,box-shadow .2s}
+  .wy-back a:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,43,91,.15)}
+
+  .wy-chat{margin:10px 0;border-radius:12px;padding:12px 16px;font-size:13.5px;line-height:1.95}
+  .wy-chat i{display:block;font-style:normal;font-size:12px;font-weight:bold;letter-spacing:1px;margin-bottom:4px}
+  .wy-chat.wy-q{background:#eef4ff;border:1px solid #c7d8f8;color:#1e3a8a}
+  .wy-chat.wy-q i{color:#1d5bbf}
+  .wy-chat.wy-a{background:#f5f6f8;border:1px solid #e5e7eb;color:#374151}
+  .wy-chat.wy-a i{color:#6b7280}
+  .wy-code{background:#0f172a;color:#e2e8f0;border-radius:12px;padding:14px 18px;font-family:Consolas,"Courier New",monospace;font-size:13px;line-height:1.9;overflow-x:auto;margin:8px 0 12px}
+  .wy-code b{color:#fbbf24;font-weight:normal}
+  .wy-ver{font-size:13.5px;color:#166534;line-height:2.1;padding-left:6px}
+  .wy-ver b{color:#15803d}
+  .wy-ans{font-size:13.5px;color:#374151;line-height:2.1;padding-left:10px;border-left:3px solid #c7d8f8;margin:6px 0}
+  .wy-ans b{color:#0f2b5b}
+  .wy-shot{border:1.5px dashed #94a3b8;border-radius:10px;padding:12px 16px;color:#64748b;font-size:13px;line-height:2;background:#f8fafc;margin:10px 0}
+
+  footer{text-align:center;margin-top:34px;color:#9ca3af;font-size:13px;line-height:2}
+</style>
+</head>
+<body>
+<div class="wy-wrap">
+
+  <div class="wy-head">
+    <span class="wy-badge">高职 - 高级网页设计 - 课堂操作任务</span>
+    <h1>Swiper 轮播组件 <b>大国重器光影展（学生版）</b></h1>
+    <p>4 个课堂轮播已全部救活；页面下方保留作业一、二、三的提示词与 AI 对话记录（答辩用）。</p>
+    <div class="wy-goals"><i>任务1 救活最小轮播</i><i>任务2 装上圆点和箭头</i><i>任务3 让它自己翻页</i><i>任务4 七种效果随心换</i><i>作业1 提示词工程师</i><i>作业2 creative 电影感</i><i>作业3 魔都号+键盘控制</i></div>
+  </div>
+
+  <div class="wy-rule">
+    <b>任务说明（先读再动手）：</b><br>
+    ① Swiper 组件库已通过 CDN 引入，不需要再写引入代码；<br>
+    ② JS 代码统一写在页面最底部的 script 区域内；<br>
+    ③ 每完成一个任务就刷新页面验证：能拖、能点、会自己翻，才算通过；<br>
+    ④ F12控制台报错可以帮你快速找到问题；<br>
+    ⑤ 页面下方「作业一二三」区块保留每轮提示词、AI 回答与验证结论，答辩前把截图贴进预留位。
+  </div>
+
+  <!-- 任务1 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">1</span>
+      <h2>救活最小轮播 <small>三行JS，让照片可以拖动</small></h2>
+    </div>
+    <p class="wy-txt">下面是最小轮播骨架，没有初始化就不会动，初始化后可以按住拖动。</p>
+    <div class="wy-req">
+      <h3>任务1要求</h3>
+      <p>初始化 #wySw1，基础写法，空配置对象即可。</p>
+      <span class="wy-star">验证标准：按住鼠标左右拖动，图片跟着滑动</span>
+    </div>
+    <div class="wy-demo">
+      <span class="wy-demo-tag">演示一 - 最小轮播</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="wySw1">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="天宫空间站.jpg" alt="天宫空间站">
+              <div class="wy-cap"><h3>天宫空间站</h3><p>2022 全面建成，中国人的太空家园</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="复兴号动车组.jpg" alt="复兴号">
+              <div class="wy-cap"><h3>复兴号动车组</h3><p>350km/h，世界商业运营最高时速</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="C919 大飞机.jpg" alt="C919">
+              <div class="wy-cap"><h3>C919大飞机</h3><p>2023商业首航，国产干线客机</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="奋斗者号.jpg" alt="奋斗者号">
+              <div class="wy-cap"><h3>奋斗者号</h3><p>10909米，马里亚纳海沟深潜</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="中国天眼.jpg" alt="中国天眼FAST">
+              <div class="wy-cap"><h3>中国天眼FAST</h3><p>500米口径，世界最大射电望远镜</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://trae-api-cn.mchost.guru/api/ide/v1/tool_text_to_image?prompt=Adora%20Magic%20City%2C%20China%20first%20domestically%20built%20large%20luxury%20cruise%20ship%2C%20sailing%20on%20calm%20blue%20ocean%20at%20golden%20hour%2C%20white%20modern%20mega%20liner%20with%20rows%20of%20balconies%2C%20gentle%20waves%2C%20photorealistic%2C%20cinematic%20wide%20shot&image_size=landscape_16_9" alt="爱达·魔都号">
+              <div class="wy-cap"><h3>爱达·魔都号</h3><p>首艘国产大型邮轮，2024 年 1 月首航</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 任务2 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">2</span>
+      <h2>装上遥控器 <small>圆点pagination + 箭头navigation</small></h2>
+    </div>
+    <p class="wy-txt">页面内置圆点、左右箭头元素，配置后可以点击切换。</p>
+    <div class="wy-req">
+      <h3>任务2要求</h3>
+      <p>初始化 #wySw2：循环loop、切换速度600ms、可点击圆点、左右箭头切换</p>
+      <span class="wy-star">验证标准：点圆点跳转、点箭头翻页、无缝循环</span>
+    </div>
+    <div class="wy-demo">
+      <span class="wy-demo-tag">演示二 - 圆点+箭头控制</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="wySw2">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="天宫空间站.jpg" alt="天宫空间站">
+              <div class="wy-cap"><h3>天宫空间站</h3><p>三舱结构，神舟乘组常年值守</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="复兴号动车组.jpg" alt="复兴号">
+              <div class="wy-cap"><h3>复兴号动车组</h3><p>京张高铁智能驾驶</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="C919 大飞机.jpg" alt="C919">
+              <div class="wy-cap"><h3>C919大飞机</h3><p>国产大飞机梦想落地</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="奋斗者号.jpg" alt="奋斗者号">
+              <div class="wy-cap"><h3>奋斗者号</h3><p>万米深潜，深海探测新时代</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="中国天眼.jpg" alt="中国天眼FAST">
+              <div class="wy-cap"><h3>中国天眼FAST</h3><p>南仁东22年铸就观天巨目</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://trae-api-cn.mchost.guru/api/ide/v1/tool_text_to_image?prompt=Adora%20Magic%20City%2C%20China%20first%20domestically%20built%20large%20luxury%20cruise%20ship%2C%20sailing%20on%20calm%20blue%20ocean%20at%20golden%20hour%2C%20white%20modern%20mega%20liner%20with%20rows%20of%20balconies%2C%20gentle%20waves%2C%20photorealistic%2C%20cinematic%20wide%20shot&image_size=landscape_16_9" alt="爱达·魔都号">
+              <div class="wy-cap"><h3>爱达·魔都号</h3><p>国产大型邮轮实现零的突破</p></div>
+            </div>
+          </div>
+          <div class="swiper-pagination" id="wyPag2"></div>
+          <div class="swiper-button-prev" id="wyPrev2"></div>
+          <div class="swiper-button-next" id="wyNext2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 任务3 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">3</span>
+      <h2>让它自己翻页 <small>autoplay自动播放 + 循环续播</small></h2>
+    </div>
+    <p class="wy-txt">自动轮播banner常用配置，用户手动滑动后自动播放不会停下。</p>
+    <div class="wy-req">
+      <h3>任务3要求</h3>
+      <p>初始化 #wySw3：循环，2600ms自动翻页，拖动后不停，带圆点分页</p>
+      <span class="wy-star">验证标准：自动翻页，拖动松手后继续自动播放</span>
+    </div>
+    <div class="wy-demo">
+      <span class="wy-demo-tag">演示三 - 自动播放轮播</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="wySw3">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="天宫空间站.jpg" alt="天宫空间站">
+              <div class="wy-cap"><h3>天宫空间站</h3><p>巡天遥看一千河</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="复兴号动车组.jpg" alt="复兴号">
+              <div class="wy-cap"><h3>复兴号动车组</h3><p>中国速度，风驰电掣</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="C919 大飞机.jpg" alt="C919">
+              <div class="wy-cap"><h3>C919大飞机</h3><p>蓝天之上，大国担当</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="奋斗者号.jpg" alt="奋斗者号">
+              <div class="wy-cap"><h3>奋斗者号</h3><p>万米深潜，无畏探索</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="中国天眼.jpg" alt="中国天眼FAST">
+              <div class="wy-cap"><h3>中国天眼FAST</h3><p>仰望星空，脚踏实地</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://trae-api-cn.mchost.guru/api/ide/v1/tool_text_to_image?prompt=Adora%20Magic%20City%2C%20China%20first%20domestically%20built%20large%20luxury%20cruise%20ship%2C%20sailing%20on%20calm%20blue%20ocean%20at%20golden%20hour%2C%20white%20modern%20mega%20liner%20with%20rows%20of%20balconies%2C%20gentle%20waves%2C%20photorealistic%2C%20cinematic%20wide%20shot&image_size=landscape_16_9" alt="爱达·魔都号">
+              <div class="wy-cap"><h3>爱达·魔都号</h3><p>从上海吴淞口国际邮轮港出发</p></div>
+            </div>
+          </div>
+          <div class="swiper-pagination" id="wyPag3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 任务4 新增creative效果 -->
+  <div class="wy-sec">
+    <div class="wy-sec-head">
+      <span class="wy-no">4</span>
+      <h2>七种效果随心换 <small>effect参数，按钮实时切换</small></h2>
+    </div>
+    <p class="wy-txt">原生效果：slide/fade/cube/coverflow/flip/cards，第 7 种 creative 为作业二新增「电影感」：上一张缩小左移带角度、下一张放大右移带角度，像电影选片墙。切换时销毁旧实例重建。</p>
+    <div class="wy-req">
+      <h3>任务4要求</h3>
+      <p>基础：循环，3200ms自动播放，圆点，初始slide，速度800ms。进阶：点击按钮切换effect，新增creative创意效果</p>
+      <span class="wy-star">验证标准：自动轮播，点按钮切换不同动画效果</span>
+    </div>
+    <div class="wy-fx">
+      <button class="wy-on" data-fx="slide">slide 平推（默认）</button>
+      <button data-fx="fade">fade 淡入淡出</button>
+      <button data-fx="cube">cube 3D立方体</button>
+      <button data-fx="coverflow">coverflow 画廊堆叠</button>
+      <button data-fx="flip">flip 翻页</button>
+      <button data-fx="cards">cards 卡片</button>
+      <button data-fx="creative">creative 电影感【新增】</button>
+    </div>
+    <div class="wy-demo">
+      <span class="wy-demo-tag">演示四 - 效果实验台</span>
+      <div class="wy-swiper">
+        <div class="swiper" id="wySw4">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="天宫空间站.jpg" alt="天宫空间站">
+              <div class="wy-cap"><h3>天宫空间站</h3><p>试试上方效果按钮</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="复兴号动车组.jpg" alt="复兴号">
+              <div class="wy-cap"><h3>复兴号动车组</h3><p>同一组图片，七种动画</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="C919 大飞机.jpg" alt="C919">
+              <div class="wy-cap"><h3>C919大飞机</h3><p>淡入效果适合官网banner</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="奋斗者号.jpg" alt="奋斗者号">
+              <div class="wy-cap"><h3>奋斗者号</h3><p>立方体效果炫酷立体</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="中国天眼.jpg" alt="中国天眼FAST">
+              <div class="wy-cap"><h3>中国天眼FAST</h3><p>coverflow适合相册</p></div>
+            </div>
+            <div class="swiper-slide">
+              <img src="https://trae-api-cn.mchost.guru/api/ide/v1/tool_text_to_image?prompt=Adora%20Magic%20City%2C%20China%20first%20domestically%20built%20large%20luxury%20cruise%20ship%2C%20sailing%20on%20calm%20blue%20ocean%20at%20golden%20hour%2C%20white%20modern%20mega%20liner%20with%20rows%20of%20balconies%2C%20gentle%20waves%2C%20photorealistic%2C%20cinematic%20wide%20shot&image_size=landscape_16_9" alt="爱达·魔都号">
+              <div class="wy-cap"><h3>爱达·魔都号</h3><p>第六件作品 · 配图由 AI 生成</p></div>
+            </div>
+          </div>
+          <div class="swiper-pagination" id="wyPag4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wy-back"><a href="index.html">← 返回课堂实践中心</a>　<a href="swiper-lesson.html">查看教师讲解版 →</a></div>
+  <footer>Swiper课堂操作任务 - 大国重器光影展（学生版） - 高级网页设计</footer>
+</div>
+
+<script>
+// 任务1
+var wySw1 = new Swiper("#wySw1", {});
+
+// 任务2
+var wySw2 = new Swiper("#wySw2", {
+  speed: 600,
+  loop: true,
+  pagination: {
+    el: "#wyPag2",
+    clickable: true
+  },
+  navigation: {
+    nextEl: "#wyNext2",
+    prevEl: "#wyPrev2"
+  }
+});
+
+// 任务3
+var wySw3 = new Swiper('#wySw3', {
+  loop: true,
+  autoplay: {
+    delay: 2600,
+    disableOnInteraction: false
+  },
+  speed: 700,
+  pagination: {
+    el: '#wyPag3',
+    clickable: true
+  }
+});
+
+// 任务4 核心：支持切换效果，新增creative
+let wySw4;
+function initSw4(effectName = "slide") {
+  let option = {
+    loop: true,
+    autoplay: {
+      delay: 3200,
+      disableOnInteraction: false
+    },
+    speed: 800,
+    pagination: {
+      el: '#wyPag4',
+      clickable: true
+    },
+    effect: effectName
+  }
+  // 各个效果专属参数
+  if(effectName === "creative"){
+    option.creativeEffect = {
+      prev: {
+        shadow: true,
+        translate: ["-20%", 0, -1]
+      },
+      next: {
+        translate: ["100%", 0, 0]
+      }
+    }
+  }
+  if(effectName === "coverflow"){
+    option.coverflowEffect = {
+      rotate: 30,
+      stretch: 0,
+      depth: 100,
+      modifier: 1
+    }
+  }
+  if(effectName === "cube"){
+    option.cubeEffect = {
+      shadow: true,
+      slideShadows: true
+    }
+  }
+  if(effectName === "flip"){
+    option.flipEffect = {
+      slideShadows: true
+    }
+  }
+  if(effectName === "cards"){
+    option.cardsEffect = {
+      rotate: true
+    }
+  }
+  if(effectName === "fade"){
+    option.fadeEffect = {
+      crossFade: true
+    }
+  }
+  // 销毁旧实例
+  if(wySw4) wySw4.destroy();
+  wySw4 = new Swiper("#wySw4", option);
+}
+// 默认初始化slide
+initSw4("slide");
+
+// 按钮点击事件
+document.querySelectorAll('.wy-fx button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    // 1.清除所有高亮，给当前按钮加高亮
+    document.querySelectorAll('.wy-fx button').forEach(b=>b.classList.remove('wy-on'));
+    this.classList.add('wy-on');
+    // 2.读取效果名称
+    const fx = this.dataset.fx;
+    // 3.重建轮播
+    initSw4(fx);
+  })
+})
+</script>
+</body>
+</html>
